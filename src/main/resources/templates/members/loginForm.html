@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout" layout:decorate="~{layouts/basic}">
+<head>
+    <meta charset="UTF-8">
+    <link href="css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <title>Title</title>
+    <th:block layout:fragment="mystyle"></th:block>
+</head>
+<body>
+<div layout:fragment="content" class="m-4">
+    <h1>로그인</h1>
+    <hr>
+    <form id="loginForm" th:action="@{/members/login}" method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label">email</label>
+            <input type="text" class="form-control" name="email" id="email" placeholder="이메일을 입력하세요">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="비밀번호를 입력">
+        </div>
+        <p th:if="${loginErrorMsg}" class="fieldError" th:text="${loginErrorMsg}">Incorrect data</p>
+        <div class="mb-3">
+            <input type="checkbox" class="form-checkbox" name="remember-me" id="auto"></input>
+            <label for="auto">Remember me</label>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm">로그인</button>
+            <button type="button" class="btn btn-success btn-sm" onclick="location.href='new'">회원가입</button>
+        </div>
+    </form>
+</div>
+<script layout:fragment="myscript" th:inline="javascript">
+</script>
+<script src="js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script src="js/scripts.js" th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

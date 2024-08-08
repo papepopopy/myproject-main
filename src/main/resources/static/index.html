@@ -1,0 +1,144 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"-->
+<!--&gt;-->
+<!--    <head>-->
+<!--        <meta charset="utf-8" />-->
+<!--        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />-->
+<!--        <meta name="description" content="" />-->
+<!--        <meta name="author" content="" />-->
+<!--        <title>Simple Sidebar - Start Bootstrap Template</title>-->
+<!--        &lt;!&ndash; Favicon&ndash;&gt;-->
+<!--        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />-->
+<!--        &lt;!&ndash; Core theme CSS (includes Bootstrap)&ndash;&gt;-->
+<!--        <link href="css/styles.css" rel="stylesheet" />-->
+<!--        &lt;!&ndash; 전체페이지에서 공통을 사용되는 css인경우 :  Core theme CSS (includes Bootstrap) &ndash;&gt;-->
+<!--        <link href="css/styles.css"-->
+<!--              th:href="@{/css/styles.css}" rel="stylesheet" />-->
+<!--        <link href="css/bootstrap.min.css"-->
+<!--              th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />-->
+
+<!--        &lt;!&ndash; css import : 특정 페이지에서 사용되는 css인경우 &ndash;&gt;-->
+<!--        <th:block layout:fragment="mystyle"></th:block>-->
+
+<!--    </head>-->
+<!--    <body>-->
+<!--        <div class="d-flex" id="wrapper">-->
+<!--            &lt;!&ndash;menu&ndash;&gt;-->
+<!--            <div class="fixed-top">-->
+<!--                &lt;!&ndash;navigation bar&ndash;&gt;-->
+<!--                <nav class="navbar bg-dark border-bottom border-body navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">-->
+<!--                    <div class="container-fluid">-->
+<!--                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                            <span class="navbar-toggler-icon"></span>-->
+<!--                        </button>-->
+<!--                        <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--                                <li class="nav-item">-->
+<!--                                    <a class="nav-link active" aria-current="page" href="/" th:href="@{/}">Home</a>-->
+<!--                                </li>-->
+<!--                                <li class="nav-item">-->
+<!--                                    <a class="nav-link" href="/admin/items/new"-->
+<!--                                       sec:authorize="hasAuthority('USER')"-->
+<!--                                       th:href="@{/admin/items/new}">상품등록-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="nav-item">-->
+<!--                                    <a class="nav-link" href="/admin/items"-->
+<!--                                       sec:authorize="hasAuthority('USER')"-->
+<!--                                       th:href="@{/admin/items}">상품관리</a>-->
+<!--                                </li>-->
+<!--                                <li class="nav-item">-->
+<!--                                    <a class="nav-link" sec:authorize="isAuthenticated()" href="/cart" th:href="@{/cart}">장바구니</a>-->
+<!--                                </li>-->
+<!--                                <li class="nav-item">-->
+<!--                                    <a class="nav-link" sec:authorize="isAuthenticated()" href="/orders" th:href="@{/orders}">구매이력</a>-->
+<!--                                </li>-->
+<!--                                <li class="nav-item" sec:authorize="isAnonymous()">-->
+<!--                                    <a class="nav-link" href="/members/login" th:href="@{/members/login}">login</a>-->
+<!--                                </li>-->
+<!--                                <li class="nav-item" sec:authorize="isAuthenticated()">-->
+<!--                                    <a class="nav-link" href="/members/logout" th:href="@{/members/logout}">logout</a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                            <form class="d-flex" role="search">-->
+<!--                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--                                <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </nav>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Sidebar&ndash;&gt;-->
+<!--            <div class="border-end bg-white" id="sidebar-wrapper">-->
+<!--                <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>-->
+<!--                <div class="list-group list-group-flush">-->
+<!--                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Dashboard</a>-->
+<!--                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Shortcuts</a>-->
+<!--                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>-->
+<!--                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>-->
+<!--                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>-->
+<!--                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Page content wrapper&ndash;&gt;-->
+<!--            <div id="page-content-wrapper">-->
+<!--                &lt;!&ndash; Top navigation&ndash;&gt;-->
+<!--                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">-->
+<!--                    <div class="container-fluid">-->
+<!--                        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>-->
+<!--                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>-->
+<!--                        <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--                            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">-->
+<!--                                <li class="nav-item active"><a class="nav-link" href="#!">Home</a></li>-->
+<!--                                <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>-->
+<!--                                <li class="nav-item dropdown">-->
+<!--                                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>-->
+<!--                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">-->
+<!--                                        <a class="dropdown-item" href="#!">Action</a>-->
+<!--                                        <a class="dropdown-item" href="#!">Another action</a>-->
+<!--                                        <div class="dropdown-divider"></div>-->
+<!--                                        <a class="dropdown-item" href="#!">Something else here</a>-->
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </nav>-->
+<!--                &lt;!&ndash; Page content&ndash;&gt;-->
+<!--                <div class="container-fluid">-->
+<!--                    <h1 class="mt-4">Simple Sidebar</h1>-->
+<!--                    <h3>static에 있는 index.html</h3>-->
+<!--                    <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>-->
+<!--                    <p>-->
+<!--                        Make sure to keep all page content within the-->
+<!--                        <code>#page-content-wrapper</code>-->
+<!--                        . The top navbar is optional, and just for demonstration. Just create an element with the-->
+<!--                        <code>#sidebarToggle</code>-->
+<!--                        ID which will toggle the menu when clicked.-->
+<!--                    </p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; Bootstrap core JS&ndash;&gt;-->
+<!--        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--        &lt;!&ndash; Core theme JS&ndash;&gt;-->
+<!--        <script src="js/scripts.js"></script>-->
+<!--        &lt;!&ndash; 페이지 전체 공통으로 사용되는 javascript &ndash;&gt;-->
+<!--        &lt;!&ndash; Bootstrap core JS&ndash;&gt;-->
+<!--        &lt;!&ndash; Core theme JS : 부트스트램의 함수를 이용해서  modal 호출 스크립트 &ndash;&gt;-->
+<!--        <script src="js/bootstrap.bundle.min.js"-->
+<!--                th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
+<!--        <script src="js/scripts.js"-->
+<!--                th:src="@{/js/scripts.js}"></script>-->
+
+
+
+
+<!--        &lt;!&ndash; javascript import : 특정 페이지에서 사용되는 javascript인경우 &ndash;&gt;-->
+<!--        <th:block layout:fragment="myscript"></th:block>-->
+
+<!--    </body>-->
+<!--</html>-->
