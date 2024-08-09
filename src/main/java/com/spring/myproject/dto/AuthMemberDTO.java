@@ -4,24 +4,29 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
-@Builder
+import java.util.Collection;
+
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
-public class MemberDTO {
-    @NotBlank(message = "필수 입력값입니다.")
+public class AuthMemberDTO extends User {
     private String name;
-
-    @NotEmpty(message = "필수 입력값입니다.")
     private String email;
-
-    @NotEmpty(message = "필수 입력값입니다.")
-    @Length(min=4, max=16, message="4자 이상 16자 이하로 입력")
-    private String password;
-
-    @NotEmpty(message = "필수 입력값입니다.")
+    //private String password;
     private String address;
+
+    public AuthMemberDTO(
+            String username,
+            String address,
+            String password,
+            Collection<? extends GrantedAuthority> authorities) {
+
+        super(username, password, authorities);
+
+        this.email = username;
+        this.address = address;
+    }
 }

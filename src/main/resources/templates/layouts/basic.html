@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -19,7 +18,7 @@
   <th:block layout:fragment="mystyle"></th:block>
 
 </head>
-
+<!-- navigation bar-->
 <body>
 
 <div class="fixed-top">
@@ -36,13 +35,13 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/items/new"
-               sec:authorize="hasAuthority('ADMIN')"
+               sec:authorize="hasAuthority('ROLE_ADMIN')"
                th:href="@{/admin/items/new}">상품등록
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin/items"
-               sec:authorize="hasAuthority('ADMIN')"
+               sec:authorize="hasAuthority('ROLE_ADMIN')"
                th:href="@{/admin/items}">상품관리</a>
           </li>
           <li class="nav-item">
@@ -116,9 +115,10 @@
 
     </div>
 
-
   </div>
 </div>
+
+<div th:replace="~{fragments/footer::footer}"></div>
 
 
 <!-- 페이지 전체 공통으로 사용되는 javascript -->
@@ -129,11 +129,7 @@
 <script src="js/scripts.js"
         th:src="@{/js/scripts.js}"></script>
 
-
-
-
 <!-- javascript import : 특정 페이지에서 사용되는 javascript인경우 -->
 <th:block layout:fragment="myscript"></th:block>
-<div th:block layout:></div>
 </body>
 </html>

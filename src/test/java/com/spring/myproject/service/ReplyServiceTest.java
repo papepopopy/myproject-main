@@ -3,11 +3,14 @@ package com.spring.myproject.service;
 import com.spring.myproject.dto.PageRequestDTO;
 import com.spring.myproject.dto.PageResponseDTO;
 import com.spring.myproject.dto.ReplyDTO;
+import com.spring.myproject.entity.Board;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Log4j2

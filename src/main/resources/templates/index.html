@@ -108,17 +108,18 @@
       </div>
     </nav>
     <!-- Page content-->
-    <div class="container-fluid">
-      <h1 class="mt-4">Simple Sidebar</h1>
-      <h3>static에 있는 index.html</h3>
-      <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-      <p>
-        Make sure to keep all page content within the
-        <code>#page-content-wrapper</code>
-        . The top navbar is optional, and just for demonstration. Just create an element with the
-        <code>#sidebarToggle</code>
-        ID which will toggle the menu when clicked.
-      </p>
+    <div class="container-fluid" th:if="${#authentication}">
+      <h1 class="mt-4">authentication 타입을 이용하여 사용자 정보 추출</h1>
+      <h2>정보 추출</h2>
+      <p th:text="${#authentication}"></p>
+      <h2>principal</h2>
+      <p th:text="${#authentication.principal}"></p>
+      <h2>authorities</h2>
+      <p th:text="${#authentication.principal.authorities}"></p>
+      <h2>username</h2>
+      <p th:text="${#authentication.principal.username}"></p>
+      <h2>password</h2>
+      <p th:text="${#authentication.principal.password}"></p>
     </div>
   </div>
 </div>
@@ -139,6 +140,14 @@
 
 <!-- javascript import : 특정 페이지에서 사용되는 javascript인경우 -->
 <th:block layout:fragment="myscript"></th:block>
+<script th:inline="javascript">
+  console.log("index.html");
+
+  const auth = [[${#authentication}]]
+  console.log("authentication", auth);
+  console.log("authentication.principal : ", auth.principal);
+  console.log("authentication.principal.authorities", auth.principal.authorities);
+</script>
 
 </body>
 </html>

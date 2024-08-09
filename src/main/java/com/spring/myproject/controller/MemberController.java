@@ -5,14 +5,12 @@ import com.spring.myproject.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -63,11 +61,18 @@ public class MemberController {
     @GetMapping("/login/error")
     public String loginError(Model model) {
         log.info("=> login error");
-        model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해줘세요");
 
-        return "member/login";
+        model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해줘세요");
+        return "members/loginForm";
     }
 
-
-
+    //메서드 단위 권한 설정 여부테스트
+    //@Secured(value = "ROLE_ADMIN")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @GetMapping("/role_test1")
+//    @ResponseBody
+//    public String info() {
+//        return "@Secured(value = 'ROLE_ADMIN')";
+//    }
 }
+

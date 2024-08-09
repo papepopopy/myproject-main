@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class StartController {
     @GetMapping("")
-    public String memberRegistserForm(Model model) {
+    public String memberRegisterForm(Model model) {
         return "/index";
     }
 }
