@@ -41,7 +41,8 @@
             <input type="text" class="form-control"
                    placeholder="반드시 내용이 입력되어야 합니다."
                    id="writer"
-                   name="writer">
+                   name="writer"
+                   th:value="${#authentication.principal.name}" readonly>
             <label for="writer">Writer</label>
           </div>
 
@@ -65,6 +66,7 @@
 
 </style>
 
+<!-- 현재 페이지에서만 사용하는 css 정의 -->
 <!-- 현재 페이지에서만 사용하는 css 정의 -->
 <script layout:fragment="myscript" th:inline="javascript">
   const errors = [[${errors}]]
@@ -111,5 +113,6 @@
 
 
 </script>
+
 
 </html>

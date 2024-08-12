@@ -5,6 +5,7 @@ import com.spring.myproject.repository.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,15 +21,19 @@ public class RoleController {
 //        return "Role: USER or ADMIN";
 //    }
     private final MemberRepository memberRepository;
-    @PreAuthorize(value = "ROLE_ADMIN")
+
+    //admin
+    @Secured(value = {"ADMIN", "USER"}) //secured : 한개의 권한만 가능
     @GetMapping("/secured")
     public @ResponseBody String roleSe() {
-        return "@Secured(value='USER')";
+        return "@Secured(value='ROLE_ADMIN')";
     }
-    @PreAuthorize("hasRole('USER')")
+
+    //user
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/user")
     public @ResponseBody String roleUser() {
-        return "@Secured(value='USER')";
+        return "@Secured(value='ROLE_USER')";
     }
 
     @PostAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")

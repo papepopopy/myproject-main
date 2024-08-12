@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    // 지연 로딩시 사용
+
+    // 지연로딩시 적용 : 쿼리실행시 proxy객체 생성하여 proxy객체 호출시에만 수행
     @EntityGraph(attributePaths = "roleSet")
     Member findByEmail(String email);
 }

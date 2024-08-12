@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/basic}"    >
 
@@ -63,6 +64,9 @@
       <div class="card-body">
         <h5 class="card-title">Board List</h5>
 
+        <!--<div sec:authorize="isAuthenticated()">-->
+          <a class="btn-sm btn-success" th:href="@{/board/register}">글쓰기</a>
+        <!--</div>-->
         <!-- 게시글 List -->
         <table class="table">
           <thead>

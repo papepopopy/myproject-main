@@ -23,57 +23,67 @@ import java.util.stream.Collectors;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("=> loadUserByUsername: "+ username);
 
-    // 더미 User객체 생성하기
+        // 1. 더미 User객체 생성하기
     /*
     UserDetails userDetails = User.builder()
-        .username("user1@test.com")
+        .username("admin1@gmail.com")
         .password(passwordEncoder.encode("1234")) // 패스워드 인코드 필요
         .authorities("ROLE_USER")
         .build();
-     */
+    */
 
-        //2. Member Entity(DB)에 있는 정보를 기준으로 Authentication 처리
+        // 2. Member Entity(DB)에 있는 정보를 기준으로 Authentication 처리
         Member member = memberRepository.findByEmail(username);
+        log.info("==> member.getRoleSet():"+"ROLE_"+member.getRoleSet().toString());
 
         if (member == null){ // 미가입 회원일 경우
             throw new UsernameNotFoundException(username);
         }
 
-        /* 2-2. db에 있는 회원정보를 User 객체를 통해 전달하여 UserDetail 객체 생성
-        UserDetails userDetails = User.builder()
-                .username(member.getEmail())
-                .password( member.getPassword())    // 암호화 인코드 생략
-                // ROLE을 추가하여 적어야한다.
-                .authorities("ROLE_"+member.getRole().toString())
-                .build();
+        // 2-1. db에 있는 회원정보를 User객체에 정보를 저장한후 UserDetails객체 생성
+    /*
+    UserDetails userDetails = User.builder()
+        .username(member.getEmail())
+        .password( member.getPassword())    // 암호화 인코드 생략
+        // ROLE_ADMIN, ROLE_USER, ROLE_XXX
+        .authorities("ROLE_"+member.getRole().toString())
+        .build();
 
-        return userDetails;*/
+    return userDetails;
+     */
 
-        //2-3. db에 있는 회원정보를 User 객체를 통해 전달받은 AuthMemberDTO 객체 생성
+        // 2-2 db에 있는 회원정보를 User객체로부터 상속받은 AuthMemberDTO객체 정보로 저장한 후
+        // UserDetails객체 생성
+        log.info("==> Member info: "+member);
+
         AuthMemberDTO authMember = new AuthMemberDTO(
                 member.getAddress(),
+                member.getName(),
+
                 member.getEmail(),
                 member.getPassword(),
-                member.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
-                .collect(Collectors.toList())
+                member.getRoleSet()
+                        .stream()
+                        .map( role ->
+                                new SimpleGrantedAuthority("ROLE_" + role.name())
+                        ).collect(Collectors.toList())
         );
-//        authMemberDTO.setName(member.getName());
-//        authMemberDTO.setAddress(member.getAddress());
 
-        log.info("==> autoMemberDTO : " + authMember);
+        log.info("==> authMemberDTO: "+authMember);
+
         return authMember;
-    }
+    } // end loadUserByUsername()
+
 }
 
 /*
 UserDetailsService: DB에서 회원 정보를 가져오는 역할
-loadUserByUsername(): 회원정보를 조회하여 사용자의 정보와 권한을 갖는 UserDetails 인터페이스 반환
+loadUserByUsername(): 회원정보를 조회하여 사용자의 정보와 권한을 갖는 UserDetails인터페이스 반환
 UserDetails: 시큐리티에서 회원 정보를 담기위해서 사용되는 인터페이스 , 직접구현 or 시큐리티에서 제공하는 User클래스 사용
  */

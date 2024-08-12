@@ -1,6 +1,7 @@
 package com.spring.myproject.config;
 
 
+import com.spring.myproject.service.CustomUserDetailsService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -21,14 +25,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 @Log4j2@RequiredArgsConstructor
+// @EnableGlobalMethodSecurity ->  @EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true) // 어노테이션 권한 설정
 public class CustomSecurityConfig {
+
+    private final DataSource dataSource;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -44,6 +56,22 @@ public class CustomSecurityConfig {
         // 1. CSRF요청 비활성화: 개발테스트 비활성화
         //http.csrf( c-> c.disable());
 
+        // 자동 로그인
+//        http.rememberMe()
+//                .key("1234")
+//                .tokenRepository(persistentTokenRepository())
+//                .userDetailsService(customUserDetailsService)
+//                .tokenValiditySeconds(60*60*24*30); //30일
+
+        http.rememberMe(rememberMe -> rememberMe.key("1234")
+                .tokenRepository(persistentTokenRepository())
+                .userDetailsService(customUserDetailsService)
+                .tokenValiditySeconds(10)); //10초
+//                .tokenValiditySeconds(60*60*24*30)); //30일
+//                .rememberMeParameter("remember")//기본 파라미터명은 remember-me
+//                .alwaysRemember(true) //항상 실행
+
+
         // 2. 인증 과정 처리
 
         // 2.1 로그인 관련 설정 => UserDetailsSeervice인터페이스 구현 후 설정 할 것
@@ -56,12 +84,13 @@ public class CustomSecurityConfig {
                             //.loginProcessingUrl("/members/login")   // 웹 로그인창의 form action값 설정
                             .failureUrl("/members/login/error")               // 로그인 실패시 url 설정
 
+
                             // 성공 또는 실패할 경우 핸들러 사용해서 원하는 것을 실행 할 경우 적용
                             // defaultSuccessUrl(),failureUrl() 중복될 경우 핸들러가 우선으로 수행됨.
                             .successHandler(new AuthenticationSuccessHandler() {
                                 @Override
                                 public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                                    log.info("==> authentication "+authentication.getName());
+                                    log.info("==> authentication: "+authentication.getName());
                                     response.sendRedirect("/");
                                 }
                             })
@@ -76,19 +105,39 @@ public class CustomSecurityConfig {
 
         // SpringBoot 3v 변경된 코드 확인 authorizeRequests() → authorizeHttpRequests()
         //http.authorizeRequests().anyRequest().authenticated(); -> http.authorizeHttpRequests().anyRequest().authenticated();
+//    http.authorizeHttpRequests( auth -> {
+//        auth.requestMatchers("/","/members/**").permitAll();
+//        auth.requestMatchers("/board/**").hasRole("ADMIN");
+//        auth.anyRequest().permitAll();
+//    });
+//    http
+//        .authorizeRequests()
+//        .requestMatchers("/","/css/**","/js/**","/members/**").permitAll()
+//        .requestMatchers("/board/list").hasRole("ADMIN")
+//        .requestMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
+//        .anyRequest().authenticated();
+
 
         // 3. 로그아웃 관련 설정
         // 로그아웃을 기본으로 설정 => url : "/logout" 로그아웃 수행
         //http.logout(Customizer.withDefaults());
         http.logout(logout -> {
             logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/board/list")
+                    .logoutSuccessUrl("/")
                     .invalidateHttpSession(true);
         });
 
+
         return http.build();
     }
+    //4-3 자동 로그인 : 토큰
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() { //쿠키역할
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);
 
+        return repo;
+    }
 }
 
 /*
@@ -126,5 +175,29 @@ UserDetailsService인터페이스 : 인증을 처리하는 인터페이스 구�
                     // 로그아웃 기능 허용
                     .logout()
                     .permitAll();
+
+ */
+
+/* 어노테이션 권한 설정
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,  // @Secured어노테이션 확성화 여부
+        prePostEnabled = true   // @PreAuthorized, @PostAuthorized 어노테이션 활성화 여부
+        )
+
+
+
+ */
+
+
+/*
+자동 로그인 : 데이터베이스 적용=> 테이블 이름은 "persistent_logins" 으로 사용해야함.
+
+ CREATE TABLE persistent_logins (
+ 	username VARCHAR(64) NOT NULL,
+ 	series 	VARCHAR(64) PRIMARY KEY,
+ 	token 	VARCHAR(64) NOT NULL ,
+ 	last_used TIMESTAMP 	NOT NULL
+ );
+
 
  */

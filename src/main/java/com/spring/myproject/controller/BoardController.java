@@ -9,6 +9,7 @@ import com.spring.myproject.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,13 +46,13 @@ public class BoardController {
     return "board/list";
   }
 
-
   // 2. 게시글 등록
   @GetMapping("/register")
   public String registerGet(){
     // 게시글 등록 입력 폼 요청
     return "board/register";
   }
+  // 게시글 목록(DB) 작업처리
   @PostMapping("/register")
   public String registerPost(@Valid BoardDTO boardDTO,
                              BindingResult bindingResult,
@@ -74,10 +75,12 @@ public class BoardController {
     // db처리한 후 결과값을 객체에 저장
     redirectAttributes.addFlashAttribute("result", "registered");
     redirectAttributes.addFlashAttribute("bno", bno);
+
     return "redirect:/board/list";
   }
 
   // 3. 게시글 조회
+  @PreAuthorize("isAuthenticated()")
   @GetMapping({"/read", "/modify"})
   public void read(Long bno,
                    PageRequestDTO pageRequestDTO,
